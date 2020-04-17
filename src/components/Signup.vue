@@ -81,7 +81,7 @@
                 }
 
                 if (this.firstName && this.lastName) {
-                    axios.post('http://127.0.0.1:5000/api/register', {
+                    axios.post('https://api-pixelnetwork.truemachine.ru/api/register', {
                         name: this.firstName,
                         surname: this.lastName,
                         email: this.email,

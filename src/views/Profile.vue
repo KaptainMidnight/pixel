@@ -47,7 +47,7 @@
             }
         },
         async mounted() {
-            await axios.get('http://127.0.0.1:8000/api/auth/me', {
+            await axios.get('https://api-pixelnetwork.truemachine.ru/api/auth/me', {
                  headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             }).then(response => {
                 this.name = response.data.name

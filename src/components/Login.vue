@@ -52,7 +52,7 @@
                     data.set('email', this.inputLogin)
                     data.set('password', this.inputPassword)
 
-                    axios.post('http://localhost:8000/api/auth/login', data)
+                    axios.post('https://api-pixelnetwork.truemachine.ru/api/auth/login', data)
                         .then(response => {
                             localStorage.setItem('token', response.data.access_token)
                             localStorage.setItem('expires_at', response.data.expires_at)
