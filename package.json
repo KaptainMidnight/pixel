@@ -2,7 +2,6 @@
   "name": "sgo.cit73.ru",
   "version": "0.1.0",
   "homepage": "./",
-
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -15,7 +14,6 @@
     "at-ui-style": "^1.5.1",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
-    "gh-pages": "^2.2.0",
     "vue": "^2.6.11",
     "vue-page-transition": "^0.2.2",
     "vue-router": "^3.1.6",
