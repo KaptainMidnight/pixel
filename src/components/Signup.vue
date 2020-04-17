@@ -81,7 +81,7 @@
                 }
 
                 if (this.firstName && this.lastName) {
-                    axios.post('https://api-pixelnetwork.truemachine.ru/api/register', {
+                    axios.post('https://api-pixelnetwork.truemachine.ru/api/signup', {
                         name: this.firstName,
                         surname: this.lastName,
                         email: this.email,
