@@ -18,12 +18,22 @@
             </ul>
         </div>
 
-        <at-card style="margin: 50px; width: 250px; height: 300px" :body-style="{ padding: 0 }">
-            <h4 slot="title">{{this.name}} {{this.surname}}</h4>
-            <div>
-                <img src="https://sun9-30.userapi.com/c854120/v854120601/1fd3af/U8hVyc4zpJk.jpg" style="width: 100%;">
+        <div class="inner">
+            <div class="profile">
+                <img src="https://via.placeholder.com/200x250" alt="User profile">
+                <label for="upload-photo">Добавить фото</label>
+                <input type="file" id="upload-photo" />
             </div>
-        </at-card>
+
+            <div class="post">
+                <at-textarea class="textarea" v-model="postText" placeholder="Что у Вас нового?" />
+                <div class="buttons">
+                    <at-button icon="icon-camera" type="text" class="tab-icon">Фото</at-button>
+                    <at-button icon="icon-video" type="text" class="tab-icon">Видео</at-button>
+                    <at-button icon="icon-film" type="text" class="tab-icon">Фильм</at-button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -35,6 +45,7 @@
             return {
                 name: '',
                 surname: '',
+                postText: '',
             }
         },
         methods: {
@@ -106,5 +117,85 @@
             text-align: center;
             align-items: center;
         }
+    }
+
+    .inner {
+        margin: 0 auto;
+        width: 1200px;
+        position: relative;
+    }
+
+    .profile {
+        width: 200px;
+        height: 250px;
+
+        border-radius: 10px;
+        margin-top: 70px;
+        margin-left: 50px;
+        margin-bottom: 10px;
+        display: inline-block;
+        position: relative;
+    }
+
+    .profile img {
+        border-radius: 10px;
+        width: 100%;
+        height: 100%;
+    }
+
+    .profile input[type=file] {
+        border-radius: 10px;
+        background: #eee;
+        position: absolute;
+        opacity: 0;
+        z-index: -99999;
+    }
+
+    .profile label {
+        cursor: pointer;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: 30px 55px;
+        display: block;
+        text-align: center;
+        background: #eee;
+        border-radius: 30px;
+        padding: 5px;
+        font-size: 10px;
+    }
+
+    .post {
+        margin-left: 40px;
+        background: #eee;
+        border-radius: 10px;
+        display: inline-block;
+        margin-left: 50px;
+        width: 580px;
+        top: 0;
+
+        align-items: center;
+        margin-top: 70px;
+        position: absolute;
+    }
+
+    .tab-icon {
+        margin: 0 10px;
+        text-align: center;
+        align-items: center;
+        color: #000;
+    }
+
+    .at-btn {
+        color: #000;
+    }
+
+    .at-btn:hover {
+        color: #000 !important;
+    }
+
+    .buttons {
+        margin-bottom: 10px;
+        margin-top: 10px;
     }
 </style>
