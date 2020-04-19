@@ -78,7 +78,7 @@
                     return
                 }
 
-                axios.post('http://127.0.0.1:8000/api/auth/signup', {
+                axios.post('https://api-pixelnetwork.truemachine.ru/api/auth/signup', {
                     name: this.firstName,
                     surname: this.lastName,
                     email: this.email,
