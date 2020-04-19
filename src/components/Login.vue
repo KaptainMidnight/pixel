@@ -1,16 +1,17 @@
 <template>
     <div>
         <Header/>
-        <div class="login-block">
-            <i class="icon icon-log-in"></i>
-            <br>
-            <h2>Вход</h2>
-            <hr>
-        </div>
 
         <form class="form" @keyup.enter="attempt">
-            <at-input v-model="inputLogin" icon="user" placeholder="Имя пользователя" required class="input"></at-input>
-            <at-input v-model="inputPassword" icon="lock" placeholder="Пароль" type="password" required class="input"></at-input>
+            <div class="login-block">
+                <i class="icon icon-log-in"></i>
+                <br>
+                <h2>Вход</h2>
+                <hr>
+            </div>
+
+            <at-input :class="{'at-input--error': ($v.inputLogin.$dirty && !$v.inputLogin.required) || ($v.inputLogin.$dirty && !$v.inputLogin.email)}" v-model.trim="inputLogin" icon="user" placeholder="Имя пользователя" required class="input"></at-input>
+            <at-input :class="{'at-input--error': ($v.inputPassword.$dirty && !$v.inputPassword.required)}" v-model="inputPassword" icon="lock" placeholder="Пароль" type="password" required class="input"></at-input>
 
             <at-checkbox v-model="rememberMe" label="Запомнить меня">Запомнить меня</at-checkbox>
             <br>
@@ -22,7 +23,7 @@
                 </router-link>
 
                 <router-link to="/signup">
-                    <at-button type="text" class="no-account">Зарегестрируйтесь</at-button>
+                    <at-button type="text" class="no-account">Зарегистрируйтесь</at-button>
                 </router-link>
             </div>
         </form>
@@ -31,6 +32,7 @@
 
 <script>
     import Header from '@/components/Header'
+    import { email, required } from 'vuelidate/lib/validators'
     import axios from 'axios'
 
     export default {
@@ -40,38 +42,41 @@
                 inputLogin: '',
                 inputPassword: '',
                 rememberMe: false,
-                loginSuccess: true,
-                passwordSuccess: true
             }
         },
         methods: {
             attempt() {
-                if (this.inputLogin && this.inputPassword) {
-                    let data = new FormData()
-
-                    data.set('email', this.inputLogin)
-                    data.set('password', this.inputPassword)
-
-                    axios.post('https://api-pixelnetwork.truemachine.ru/api/auth/login', data)
-                        .then(response => {
-                            localStorage.setItem('token', response.data.access_token)
-                            localStorage.setItem('expires_at', response.data.expires_at)
-                            this.$message.success({
-                                message: 'Успешная авторизация',
-                                duration: 1000,
-                            })
-                            setTimeout(() => {
-                                this.$router.push('/profile')
-                            }, 1000)
-                        }).catch(e => {
-                            console.log(e)
-                            this.$message.error({
-                                message: 'Неверный логин или пароль',
-                                duration: 1000,
-                            })
-                        })
+                if (this.$v.$invalid) {
+                    this.$v.$touch()
+                    return
                 }
+
+                axios.post('http://127.0.0.1:8000/api/auth/login', {
+                    email: this.inputLogin,
+                    password: this.inputPassword
+                }).then(response => {
+                    console.log(response.data)
+                    localStorage.setItem('token', response.data.access_token)
+
+                    this.$message.success({
+                        message: 'Успешный вход',
+                        duration: 1000,
+                    })
+
+                    setTimeout(() => {
+                        this.$router.push('/profile')
+                    }, 1000)
+                }).catch(() => {
+                    this.$message.error({
+                        message: 'Неверный логин или пароль',
+                        duration: 1000
+                    })
+                })
             }
+        },
+        validations: {
+            inputLogin: { required, email },
+            inputPassword: { required }
         }
     }
 </script>
@@ -101,11 +106,7 @@
     .form {
         width: 300px;
         height: 150px;
-
-        left: 50%;
-        top: 50%;
-        position: absolute;
-        transform: translate(-50%, -50%);
+        margin: 0 auto;
     }
 
     .input {

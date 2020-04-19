@@ -2,22 +2,21 @@
     <div>
         <Header/>
 
-        <div class="login-block">
-            <i class="icon icon-lock"></i>
-            <div>
-                <p>
-                    Зарегистрироваться
-                </p>
-                <hr>
-            </div>
-        </div>
-
         <form @keyup.enter="register" class="form">
-            <at-input v-model.trim="firstName" placeholder="Имя" class="input" icon="help-circle"/>
-            <at-input v-model.trim="lastName" placeholder="Фамилия" class="input" icon="help-circle"/>
-            <at-input v-model.trim="email" placeholder="Почта" class="input" icon="mail"/>
-            <at-input v-model="password" type="password" placeholder="Пароль" class="input" icon="lock"/>
-            <at-input v-model="passwordConfirmation" type="password" placeholder="Повтор пароля" class="input" icon="lock"/>
+            <div class="login-block">
+                <i class="icon icon-lock"></i>
+                <div>
+                    <p>
+                        Зарегистрироваться
+                    </p>
+                    <hr>
+                </div>
+            </div>
+            <at-input :class="{'at-input--error': ($v.firstName.$dirty && !$v.firstName.required) || ($v.firstName.$dirty && !$v.firstName.minLength)}" v-model.trim="firstName" placeholder="Имя" class="input" icon="help-circle"/>
+            <at-input :class="{'at-input--error': ($v.lastName.$dirty && !$v.lastName.required) || ($v.lastName.$dirty && !$v.lastName.minLength)}" v-model.trim="lastName" placeholder="Фамилия" class="input" icon="help-circle"/>
+            <at-input :class="{'at-input--error': ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email)}" v-model.trim="email" placeholder="Почта" class="input" icon="mail"/>
+            <at-input :class="{'at-input--error': ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength)}" v-model="password" type="password" placeholder="Пароль" class="input" icon="lock"/>
+            <at-input :class="{'at-input--error': ($v.passwordConfirmation.$dirty && !$v.passwordConfirmation.required) || ($v.passwordConfirmation.$dirty && !$v.passwordConfirmation.minLength)}" v-model="passwordConfirmation" type="password" placeholder="Повтор пароля" class="input" icon="lock"/>
 
             <at-checkbox v-model="readLicence">Я прочитал
                 <router-link to="license">соглашение</router-link>
@@ -46,61 +45,60 @@
                 password: '',
                 passwordConfirmation: '',
                 email: '',
-                readLicence: false,
-                reg: /^.+@.+\..+$/gm
+                readLicence: false
             }
         },
         validations: {
-            email: {email, required},
-            password: {required, minLength: minLength(6)},
+            email: { email, required },
+            password: { minLength: minLength(6), required },
+            firstName: { required, minLength: minLength(2) },
+            lastName: { required, minLength: minLength(3) },
+            passwordConfirmation: { required, minLength: minLength(6) }
         },
         methods: {
             register() {
-                if (this.passwordConfirmation !== this.password) {
-                    this.$message.error({
-                        message: 'Пароли не совпадают',
-                        duration: 1000
-                    })
+                if (this.$v.$invalid) {
+                    this.$v.$touch()
                     return
                 }
 
                 if (!this.readLicence) {
                     this.$message.error({
                         message: 'Лицензионное соглашение не принято',
-                        duration: 1000
+                        duration: 1000,
                     })
                     return
                 }
 
-                if (!this.checkEmail(this.email)) {
+                if (this.passwordConfirmation != this.password) {
                     this.$message.error({
-                        message: 'Неверно введена почта',
-                        duration: 1000
+                        message: 'Пароли не совпадают',
+                        duration: 1000,
                     })
                     return
                 }
 
-                if (this.firstName && this.lastName) {
-                    axios.post('https://api-pixelnetwork.truemachine.ru/api/auth/signup', {
-                        name: this.firstName,
-                        surname: this.lastName,
-                        email: this.email,
-                        password: this.password,
-                        password_confirmation: this.passwordConfirmation
-                    }).then(() => {
-                        this.$message.success({
-                            message: 'Успешная регистрация',
-                            duration: 1000,
-                            type: 'success'
-                        })
-
-                        setTimeout(() => {
-                            this.$router.push('/login')
-                        }, 1000)
-                    }).catch(error => {
-                        console.log(error)
+                axios.post('http://127.0.0.1:8000/api/auth/signup', {
+                    name: this.firstName,
+                    surname: this.lastName,
+                    email: this.email,
+                    password: this.password,
+                    password_confirmation: this.passwordConfirmation
+                }).then(() => {
+                    this.$message.success({
+                        message: 'Успешная регистрация',
+                        duration: 1000
                     })
-                }
+
+                    setTimeout(() => {
+                        this.$router.push('/login')
+                    }, 1000)
+                }).catch(() => {
+                    this.$message.error({
+                        message: 'Произошла неизвестная ошибка. Попробуйте позже',
+                        duration: 1000,
+                    })
+                })
             },
             checkEmail() {
                 return (this.email === "") ? false : (this.reg.test(this.email))
@@ -138,12 +136,7 @@
     .form {
         width: 300px;
         height: 150px;
-
-        
-        left: 50%;
-        top: 50%;
-        position: absolute;
-        transform: translate(-50%, -50%);
+        margin: 0 auto;
     }
 
     .input {
