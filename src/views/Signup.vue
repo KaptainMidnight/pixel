@@ -77,6 +77,9 @@
                 <v-btn color="primary" block @click.prevent="signup">Зарегистрироваться</v-btn>
               </v-card-actions>
             </v-card>
+            <v-btn text to="/login" class="d-flex justify-space-around mt-3">
+              Уже есть аккаунт?
+            </v-btn>
           </v-col>
         </v-row>
       </v-container>

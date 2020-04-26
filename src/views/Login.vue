@@ -49,6 +49,15 @@
                 <v-btn color="primary" block @click.prevent="login">Войти</v-btn>
               </v-card-actions>
             </v-card>
+            <div class="d-flex justify-space-around mt-3">
+              <v-btn to='/signup' text>
+                Нет аккаунта?
+              </v-btn>
+
+              <v-btn to="/reset" text>
+                Забыли пароль?
+              </v-btn>
+            </div>
             </v-form>
           </v-col>
         </v-row>

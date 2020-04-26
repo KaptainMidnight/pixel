@@ -4,6 +4,7 @@ import router from './router'
 import vuetify from '@/plugins/vuetify'
 import VuePageTransition from 'vue-page-transition'
 import Vuelidate from 'vuelidate'
+import store from './store'
 
 Vue.use(VuePageTransition)
 Vue.use(Vuelidate)
@@ -13,5 +14,6 @@ Vue.config.productionTip = false
 new Vue({
   router,
   vuetify,
+  store,
   render: h => h(App)
 }).$mount('#app')

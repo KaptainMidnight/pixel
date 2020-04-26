@@ -48,7 +48,7 @@
       app
       clipped-left
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon class="hidden-md-and-up" @click.stop="drawer = !drawer" />
       <v-toolbar-title>PIXELNETWORK</v-toolbar-title>
     </v-app-bar>
 
@@ -75,6 +75,32 @@
           </v-list-item-content>
         </v-list-item>
       </v-card>
+      <v-card class="mx-auto mt-10" max-width="500" outlined="">
+        <v-list-item three-line>
+          <v-list-item-content>
+            <div class="overline mb-4">v0.0.2</div>
+            <v-list-item-title class="headline mb-1">
+              Список изменений
+            </v-list-item-title>
+
+            <v-list-item-subtitle class="ml-7">
+              Изменение внутренней механики
+            </v-list-item-subtitle>
+
+            <v-list-item-subtitle class="ml-7">
+              Добавлены кнопки у форм регистрации и авторизации
+            </v-list-item-subtitle>
+
+            <v-list-item-subtitle class="ml-7">
+              Автоматическиое обновление постов при его создании
+            </v-list-item-subtitle>
+            
+            <v-list-item-subtitle class="ml-7">
+              Добавление друзей (пока еще не работает)
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
     </v-content>
 
     <Footer />
@@ -88,7 +114,7 @@
     components: { Footer },
     data() {
       return {
-        drawer: false
+        drawer: true
       }
     },
     created () {

@@ -21,6 +21,10 @@ export default new VueRouter({
     {
       path: '/profile',
       component: () => import('@/views/Profile')
+    },
+    {
+      path: '/friends',
+      component: () => import('@/views/Friends')
     }
   ]
 })

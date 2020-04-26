@@ -14,7 +14,7 @@
 
             <v-list-item-content>
                 <v-list-item-title>
-                    {{ this.name }} {{ this.surname }}
+                    {{ getFullName }}
                 </v-list-item-title>
             </v-list-item-content>
         </v-list-item>
@@ -43,7 +43,7 @@
           </v-list-item>
         </router-link>
 
-        <router-link class="link-router" to="/messages">
+        <router-link class="link-router" to="/friends">
           <v-list-item link>
               <v-list-item-action>
                 <v-icon>mdi-account</v-icon>
@@ -54,7 +54,7 @@
           </v-list-item>
         </router-link>
 
-        <router-link class="link-router" to="/messages">
+        <router-link class="link-router" to="/music">
           <v-list-item link>
               <v-list-item-action>
                 <v-icon>mdi-library-music</v-icon>
@@ -114,16 +114,6 @@
       <v-toolbar-title>PIXELNETWORK</v-toolbar-title>
     </v-app-bar>
 
-    <v-alert
-      dense
-      text
-      type="success"
-      max-width="400"
-      v-if="successCreatePost"
-    >
-      Пост успешно создан
-    </v-alert>
-
     <v-content center>
        <v-card width="400" class="mx-auto mt-10">
            <v-form class="px-5 py-5">
@@ -168,78 +158,115 @@
 
   export default {
     components: { Footer },
-    data() {
-      return {
-        drawer: true,
-        name: '',
-        surname: '',
-        loading: true,
-        posts: [],
-        title: '',
-        content: '',
-        successCreatePost: false
+    computed: {
+      getFullName() {
+        return this.$store.getters.getFullName
+      },
+      posts() {
+        return this.$store.getters.getPosts
       }
-    },
-    async mounted () {
-        this.$vuetify.theme.dark = true
-
-        await axios.get(baseURL + '/api/post/all', {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then(response => {
-            if (response.data) {
-                this.posts = response.data
-                this.loading = false
-                return
-            }
-        }).catch(e => {
-            console.error(e)
-        })
-
-        await axios.get(baseURL + '/api/auth/me', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        }).then(response => {
-          console.log(response.data)
-
-          if (response.data.name) {
-            this.name = response.data.name
-            this.surname = response.data.surname
-          }
-        }).catch(e => {
-          console.log(e)
-        })
     },
     methods: {
-      createPost() {
-        let data = new FormData()
-        data.set('title', this.title)
-        data.set('content', this.content)
-        axios.post(baseURL + '/api/post/create', data, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        }).then(response => {
-            console.log(response.data)
-
-            if (response.data.message) {
-                this.successCreatePost = true
-                this.title = ''
-                this.content = ''
-            }
-        }).catch(() => {
-          console.error('Ошибка при создании поста')
-        })
-      },
       logout() {
         localStorage.clear()
+
         this.$router.push('/login')
-        return
+      },
+      createPost() {
+        this.$store.dispatch('createPost', { title: this.title, content: this.content })
+        this.title = ''
+        this.content = ''
       }
+    },
+    data() {
+      return {
+        title: '',
+        content: '',
+        drawer: true,
+        loading: true
+      }
+    },
+    mounted() {
+      this.$vuetify.theme.dark = true
+
+      this.$store.dispatch('getFullName')
+      this.$store.dispatch('getPostsServer')
+      this.loading = false
     }
   }
+
+  // export default {
+  //   components: { Footer },
+  //   async mounted () {
+  //       this.$vuetify.theme.dark = false
+
+  //       await axios.get(baseURL + '/api/post/all', {
+  //           headers: {
+  //               Authorization: `Bearer ${localStorage.getItem('token')}`
+  //           }
+  //       }).then(response => {
+  //           if (response.data) {
+  //               this.posts = response.data.reverse()
+  //               this.loading = false
+  //               return
+  //           }
+  //       }).catch(e => {
+  //           console.error(e)
+  //       })
+
+  //       await axios.get(baseURL + '/api/auth/me', {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem('token')}`
+  //         }
+  //       }).then(response => {
+  //         console.log(response.data)
+
+  //         if (response.data.name) {
+  //           this.name = response.data.name
+  //           this.surname = response.data.surname
+  //         }
+  //       }).catch(e => {
+  //         console.log(e)
+  //       })
+  //   },
+  //   methods: {
+  //     createPost() {
+  //       let data = new FormData()
+  //       data.set('title', this.title)
+  //       data.set('content', this.content)
+  //       axios.post(baseURL + '/api/post/create', data, {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem('token')}`
+  //         }
+  //       }).then(response => {
+  //           console.log(response.data)
+  //           if (response.data.message) {
+  //               this.title = ''
+  //               this.content = ''
+
+  //               axios.get(baseURL + '/api/post/all', {
+  //                 headers: {
+  //                   Authorization: `Bearer ${localStorage.getItem('token')}`
+  //                 }
+  //               }).then(response => {
+  //                 this.posts = response.data.reverse()
+  //                 console.log(this.posts)
+  //               }).catch(e => {
+  //                 console.error(e)
+  //               })
+  //           }
+            
+  //       }).catch(() => {
+  //         console.error('Ошибка при создании поста')
+  //       })
+  //     },
+  //     logout() {
+  //       localStorage.clear()
+  //       this.$router.push('/login')
+  //       return
+  //     }
+  //   }
+  // }
 </script>
 
 

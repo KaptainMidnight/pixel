@@ -1,21 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+
+import user from './user'
+import post from './post'
+import friend from './friend'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    state: {
-        name: '',
-        surname: '',
-        posts: []
-    },
-    actions: {
-        async getUserData({ dispatch }, email, password) {
-            await axios.post()
-        }
-    },
-    mutations: {
-
+    modules: {
+        user,
+        post,
+        friend
     }
 })
